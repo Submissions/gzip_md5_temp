@@ -139,18 +139,18 @@ def compute_md5_of_uncompressed_data(gz_file_path):
 
 def compute_md5_of_uncompressed_data(gz_file_path):
     """Return the hex digest of the corresponding uncompressed data."""
-    zcat = subprocess.Popen(['gunzip', gz_file_path],
+    gunzip = subprocess.Popen(['gunzip --keep', gz_file_path],
                              stdin=subprocess.DEVNULL,
                              stdout=subprocess.PIPE)
     md5sum = subprocess.Popen('md5sum',
-                              stdin=zcat.stdout,
+                              stdin=gunzip.stdout,
                               stdout=subprocess.PIPE)
     out, err = md5sum.communicate()
     if md5sum.returncode:
         raise Exception('md5sum returned error %s for %s', md5sum.returncode, gz_file_path)
-    zcat.wait()
-    if zcat.returncode:
-        raise Exception('zcat returned error %s for %s', zcat.returncode, gz_file_path)
+    gunzip.wait()
+    if gunzip.returncode:
+        raise Exception('gunzip returned error %s for %s', gunzip.returncode, gz_file_path)
     return out[:MD5_LENGTH]
 
     
