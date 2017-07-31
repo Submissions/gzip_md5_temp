@@ -124,7 +124,7 @@ def check(gz_file_path, md5_file_path):
 
 
 HASH_BLOCK_SIZE = 128 * 2 ** 10  # 128 kB
-""""
+"""
 def compute_md5_of_uncompressed_data(gz_file_path):
     #Return the hex digest of the corresponding uncompressed data.#
     md5_of_uncompressed_data = hashlib.md5()
