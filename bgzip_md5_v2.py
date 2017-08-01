@@ -151,7 +151,7 @@ def compute_md5_of_uncompressed_data(gz_file_path):
     zcat.wait()
     if zcat.returncode:
         raise Exception('zcat returned error %s for %s', zcat.returncode, gz_file_path)
-    return out[:MD5_LENGTH]
+    return out[:MD5_LENGTH].decode('ascii')
 
     
 if __name__ == '__main__':
