@@ -118,7 +118,7 @@ def check(gz_file_path, md5_file_path):
     with open(md5_file_path) as fin:
         expected = fin.readline()[:MD5_LENGTH]
     if expected != observed:
-        logger.error('MD5 mismatch for %, %s != %s', gz_file_path, expected, observed)
+        logger.error('MD5 mismatch for %s, %s != %s', gz_file_path, expected, observed)
         return False
     return True
 
@@ -139,7 +139,7 @@ def compute_md5_of_uncompressed_data(gz_file_path):
 
 def compute_md5_of_uncompressed_data(gz_file_path):
     """Return the hex digest of the corresponding uncompressed data."""
-    gunzip = subprocess.Popen(['gunzip --keep', gz_file_path],
+    gunzip = subprocess.Popen(['gunzip', '-c', gz_file_path],
                              stdin=subprocess.DEVNULL,
                              stdout=subprocess.PIPE)
     md5sum = subprocess.Popen('md5sum',
@@ -151,7 +151,9 @@ def compute_md5_of_uncompressed_data(gz_file_path):
     gunzip.wait()
     if gunzip.returncode:
         raise Exception('gunzip returned error %s for %s', gunzip.returncode, gz_file_path)
-    return out[:MD5_LENGTH]
+    # We know that this is hexadecimal digits in ASCII.
+    result = out[:MD5_LENGTH].decode('ascii')
+    return result
 
     
 if __name__ == '__main__':
